@@ -1,0 +1,52 @@
+* { box-sizing: border-box }
+html, body { height: 100% }
+body { margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; background: #0f172a; color: #e2e8f0 }
+a { color: inherit }
+
+.app-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: #111827; border-bottom: 1px solid #1f2937 }
+.app-header h1 { margin: 0; font-size: 20px }
+.brand { font-weight: 600; color: #93c5fd }
+
+.container { max-width: 1000px; margin: 0 auto; padding: 20px }
+
+.quick-add { background: #0b1220; border: 1px solid #1f2937; border-radius: 10px; padding: 14px; margin-bottom: 16px }
+.row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 8px }
+.row input[type="text"], .row input[type="number"], .row input[type="date"], .filters input, .filters select { width: 100%; padding: 10px 12px; border: 1px solid #1f2937; border-radius: 8px; background: #0f172a; color: #e2e8f0 }
+.row input::placeholder, .filters input::placeholder { color: #94a3b8 }
+.checkbox { display: inline-flex; align-items: center; gap: 8px }
+
+.actions { display: flex; gap: 8px }
+.actions .primary { background: #2563eb; color: white; border: none; border-radius: 8px; padding: 10px 14px; cursor: pointer }
+.actions .ghost { background: transparent; color: #93c5fd; border: 1px solid #1f2937; border-radius: 8px; padding: 10px 14px; cursor: pointer }
+.actions button:hover { opacity: .9 }
+
+.toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 14px 0 }
+.filters { display: flex; flex-wrap: wrap; gap: 8px }
+.data-actions { display: flex; gap: 8px }
+.data-actions button { background: #334155; color: #e2e8f0; border: 1px solid #1f2937; border-radius: 8px; padding: 8px 12px; cursor: pointer }
+
+.stats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px }
+.stat { background: #0b1220; border: 1px solid #1f2937; border-radius: 8px; padding: 8px 12px; color: #94a3b8 }
+
+.task-list { display: grid; gap: 10px }
+.task { display: grid; grid-template-columns: 1fr 2fr 1fr auto; gap: 12px; align-items: center; background: #0b1220; border: 1px solid #1f2937; border-radius: 10px; padding: 12px }
+.task-left { display: flex; gap: 8px; align-items: center }
+.task-middle { display: grid; gap: 6px }
+.task-title { font-weight: 600; color: #e5e7eb }
+.task-details { color: #cbd5e1; font-size: 14px }
+.chips { display: flex; gap: 6px; flex-wrap: wrap }
+.chip { background: #1f2937; color: #cbd5e1; border-radius: 999px; padding: 4px 10px; font-size: 12px }
+.task-right { display: grid; gap: 6px }
+.task-right input { width: 100%; padding: 6px 8px; border: 1px solid #1f2937; border-radius: 8px; background: #0f172a; color: #e2e8f0 }
+.task-actions { display: flex; gap: 8px; align-items: center }
+.task-actions button { background: #ef4444; color: white; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer }
+.toggle { display: inline-flex; align-items: center; gap: 6px; color: #cbd5e1 }
+.toggle input { width: 16px; height: 16px }
+
+.footer { padding: 20px; text-align: center; color: #94a3b8 }
+
+@media (max-width: 880px) {
+  .row { grid-template-columns: 1fr 1fr }
+  .task { grid-template-columns: 1fr }
+  .task-right { grid-template-columns: 1fr 1fr }
+}

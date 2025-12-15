@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quadro de Tarefas — Gráfica FL</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>Quadro de Tarefas</h1>
+      <div class="brand">Gráfica FL</div>
+    </header>
+
+    <main class="container">
+      <section class="quick-add">
+        <form id="quickForm" autocomplete="off">
+          <div class="row">
+            <input id="clienteInput" type="text" placeholder="Cliente" required>
+            <input id="detalhesInput" type="text" placeholder="Detalhes (ex: 50 cardápios)" required>
+          </div>
+          <div class="row">
+            <input id="tipoInput" type="text" placeholder="Tipo de produto (ex: Cardápios, Nº grande)">
+            <input id="valorInput" type="number" step="0.01" min="0" placeholder="Valor (R$)">
+            <input id="previstaInput" type="date" placeholder="Data prevista">
+            <label class="checkbox">
+              <input id="entradaInput" type="checkbox">
+              <span>Deu entrada</span>
+            </label>
+          </div>
+          <div class="actions">
+            <button type="submit" class="primary">Adicionar</button>
+            <button type="button" id="clearFormBtn" class="ghost">Limpar</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="toolbar">
+        <div class="filters">
+          <input id="searchInput" type="search" placeholder="Buscar por cliente ou detalhes">
+          <select id="statusFilter">
+            <option value="todas">Todas</option>
+            <option value="afazer">A fazer</option>
+            <option value="concluidas">Concluídas</option>
+          </select>
+          <select id="entradaFilter">
+            <option value="todos">Entrada: todos</option>
+            <option value="sim">Entrada: sim</option>
+            <option value="nao">Entrada: não</option>
+          </select>
+          <input id="tipoFilter" type="text" placeholder="Filtrar por tipo">
+          <button type="button" id="clearFiltersBtn" class="ghost">Limpar filtros</button>
+        </div>
+        <div class="data-actions">
+          <input id="pbUrlInput" type="text" placeholder="Servidor PocketBase (ex: http://192.168.0.5:8090)" style="min-width:280px">
+          <button type="button" id="connectPBBtn">Conectar</button>
+          <button type="button" id="useLocalBtn" class="ghost">Usar local</button>
+          <button type="button" id="exportBtn">Exportar JSON</button>
+          <button type="button" id="importBtn">Importar JSON</button>
+          <input type="file" id="importFile" accept="application/json" hidden>
+        </div>
+      </section>
+
+      <section class="stats">
+        <div id="statsTotal" class="stat"></div>
+        <div id="statsAfazer" class="stat"></div>
+        <div id="statsConcluidas" class="stat"></div>
+        <div id="statsEntrada" class="stat"></div>
+      </section>
+
+      <section>
+        <div id="taskList" class="task-list"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>Salva automaticamente no navegador. Nenhum cadastro necessário.</div>
+    </footer>
+  </body>
+</html>
