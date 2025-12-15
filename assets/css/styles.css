@@ -28,6 +28,12 @@ a { color: inherit }
 .stats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px }
 .stat { background: #0b1220; border: 1px solid #1f2937; border-radius: 8px; padding: 8px 12px; color: #94a3b8 }
 
+.accounting { display: grid; gap: 10px; margin-bottom: 12px }
+.accounting-config { display: flex; flex-wrap: wrap; gap: 8px; align-items: center }
+.accounting-config input { width: 220px }
+.accounting-config button { background: #334155; color: #e2e8f0; border: 1px solid #1f2937; border-radius: 8px; padding: 8px 12px; cursor: pointer }
+.accounting-summary { display: flex; flex-wrap: wrap; gap: 8px }
+
 .task-list { display: grid; gap: 10px }
 .task { display: grid; grid-template-columns: 1fr 2fr 1fr auto; gap: 12px; align-items: center; background: #0b1220; border: 1px solid #1f2937; border-radius: 10px; padding: 12px }
 .task-left { display: flex; gap: 8px; align-items: center }

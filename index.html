@@ -45,6 +45,14 @@
           <div class="row">
             <textarea id="observacoesInput" rows="5" placeholder="Observações"></textarea>
           </div>
+          <div class="row">
+            <input id="qtdPapelfotoInput" type="number" step="1" min="0" placeholder="Qtd papel fotográfico">
+            <input id="qtdPlasticoInput" type="number" step="1" min="0" placeholder="Qtd plástico">
+            <select id="espessuraSelect">
+              <option value="0.5">Plástico 0.5mm</option>
+              <option value="0.7">Plástico 0.7mm</option>
+            </select>
+          </div>
           <div class="actions">
             <button type="submit" class="primary">Adicionar</button>
             <button type="button" id="clearFormBtn" class="ghost">Limpar</button>
@@ -71,6 +79,7 @@
         <div class="data-actions">
           <input id="pbUrlInput" type="text" placeholder="Servidor PocketBase (ex: http://192.168.0.5:8090)" style="min-width:280px">
           <button type="button" id="connectPBBtn">Conectar</button>
+          <button type="button" id="shareLinkBtn">Compartilhar sincronização</button>
           <button type="button" id="useLocalBtn" class="ghost">Usar local</button>
           <button type="button" id="exportBtn">Exportar JSON</button>
           <button type="button" id="importBtn">Importar JSON</button>
@@ -83,6 +92,21 @@
         <div id="statsAfazer" class="stat"></div>
         <div id="statsConcluidas" class="stat"></div>
         <div id="statsEntrada" class="stat"></div>
+      </section>
+
+      <section class="accounting">
+        <div class="accounting-config">
+          <input id="costPapelfoto" type="number" step="0.01" min="0" placeholder="Preço unitário papel (R$)">
+          <input id="costPlastico05" type="number" step="0.01" min="0" placeholder="Preço unitário plástico 0.5mm (R$)">
+          <input id="costPlastico07" type="number" step="0.01" min="0" placeholder="Preço unitário plástico 0.7mm (R$)">
+          <button type="button" id="saveCostsBtn">Salvar custos</button>
+        </div>
+        <div class="accounting-summary">
+          <div id="accReceitaCobrada" class="stat"></div>
+          <div id="accRecebido" class="stat"></div>
+          <div id="accCustos" class="stat"></div>
+          <div id="accLucro" class="stat"></div>
+        </div>
       </section>
 
       <section>
