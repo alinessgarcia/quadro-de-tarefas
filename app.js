@@ -25,17 +25,19 @@ function mapPbToTask(r) {
     detalhes: r.detalhes || "",
     tipoProduto: r.tipoProduto || "",
     valor: r.valor ?? null,
+    valorEntrada: r.valorEntrada ?? null,
     deuEntrada: !!r.deuEntrada,
     concluida: !!r.concluida,
     dataPrevista: r.dataPrevista || "",
     dataExecucao: r.dataExecucao || "",
     dataCriacao: r.dataCriacao || todayStr(),
+    observacoes: r.observacoes || "",
   }
 }
 
 async function pbCreate(t) {
   const url = `${state.settings.pbUrl}/api/collections/tasks/records`
-  const r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ cliente: t.cliente, detalhes: t.detalhes, tipoProduto: t.tipoProduto, valor: t.valor ?? null, deuEntrada: !!t.deuEntrada, concluida: !!t.concluida, dataPrevista: t.dataPrevista || "", dataExecucao: t.dataExecucao || "", dataCriacao: t.dataCriacao || todayStr() }) })
+  const r = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ cliente: t.cliente, detalhes: t.detalhes, tipoProduto: t.tipoProduto, valor: t.valor ?? null, valorEntrada: t.valorEntrada ?? null, deuEntrada: !!t.deuEntrada, concluida: !!t.concluida, dataPrevista: t.dataPrevista || "", dataExecucao: t.dataExecucao || "", dataCriacao: t.dataCriacao || todayStr(), observacoes: t.observacoes || "" }) })
   const j = await r.json()
   return mapPbToTask(j)
 }
@@ -43,7 +45,7 @@ async function pbCreate(t) {
 async function pbUpdate(t) {
   if (!t.pbId) return
   const url = `${state.settings.pbUrl}/api/collections/tasks/records/${t.pbId}`
-  await fetch(url, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ cliente: t.cliente, detalhes: t.detalhes, tipoProduto: t.tipoProduto, valor: t.valor ?? null, deuEntrada: !!t.deuEntrada, concluida: !!t.concluida, dataPrevista: t.dataPrevista || "", dataExecucao: t.dataExecucao || "", dataCriacao: t.dataCriacao || todayStr() }) })
+  await fetch(url, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ cliente: t.cliente, detalhes: t.detalhes, tipoProduto: t.tipoProduto, valor: t.valor ?? null, valorEntrada: t.valorEntrada ?? null, deuEntrada: !!t.deuEntrada, concluida: !!t.concluida, dataPrevista: t.dataPrevista || "", dataExecucao: t.dataExecucao || "", dataCriacao: t.dataCriacao || todayStr(), observacoes: t.observacoes || "" }) })
 }
 
 async function pbDelete(t) {
@@ -69,7 +71,7 @@ function seedIfEmpty() {
     { cliente: "Guarujas", detalhes: "20 cardápios", tipoProduto: "Cardápios" },
     { cliente: "Agua na Boca", detalhes: "10 cardápios", tipoProduto: "Cardápios" },
     { cliente: "Simone Pitangueiras", detalhes: "22 cardápios e 20 números pequenos", tipoProduto: "Cardápios, Números pequenos" }
-  ].map(t => ({ id: uid(), cliente: t.cliente, detalhes: t.detalhes, tipoProduto: t.tipoProduto || "", valor: t.valor || null, deuEntrada: !!t.deuEntrada, concluida: false, dataPrevista: "", dataExecucao: "", dataCriacao: now }))
+  ].map(t => ({ id: uid(), cliente: t.cliente, detalhes: t.detalhes, tipoProduto: t.tipoProduto || "", valor: t.valor || null, valorEntrada: t.valorEntrada || null, deuEntrada: !!t.deuEntrada, concluida: false, dataPrevista: "", dataExecucao: "", dataCriacao: now, observacoes: "" }))
   state.tasks = seeds
   saveLocal()
   localStorage.setItem("fl_tasks_initialized", "1")
@@ -118,7 +120,7 @@ function render() {
     const entradaCb = document.createElement("input")
     entradaCb.type = "checkbox"
     entradaCb.checked = !!t.deuEntrada
-    entradaCb.addEventListener("change", async () => { t.deuEntrada = entradaCb.checked; if (isRemote()) { await pbUpdate(t) } else { saveLocal() } renderStats() })
+    entradaCb.addEventListener("change", async () => { t.deuEntrada = entradaCb.checked; if (typeof valorEntradaInput !== 'undefined') { valorEntradaInput.disabled = !entradaCb.checked } if (isRemote()) { await pbUpdate(t) } else { saveLocal() } renderStats() })
     entradaToggle.appendChild(entradaCb)
     const entradaText = document.createElement("span")
     entradaText.textContent = "Entrada"
@@ -160,6 +162,12 @@ function render() {
       chip.textContent = formatBRL(t.valor)
       chips.appendChild(chip)
     }
+    if (t.valorEntrada !== null && t.valorEntrada !== undefined && t.valorEntrada !== "") {
+      const chip = document.createElement("span")
+      chip.className = "chip"
+      chip.textContent = `Entrada: ${formatBRL(t.valorEntrada)}`
+      chips.appendChild(chip)
+    }
     middle.appendChild(title)
     middle.appendChild(details)
     middle.appendChild(chips)
@@ -189,6 +197,15 @@ function render() {
     valorInput.value = t.valor ?? ""
     valorInput.addEventListener("change", async () => { const v = valorInput.value === "" ? null : Number(valorInput.value); t.valor = isNaN(v) ? null : v; if (isRemote()) { await pbUpdate(t) } else { saveLocal() } render() })
 
+    const valorEntradaInput = document.createElement("input")
+    valorEntradaInput.type = "number"
+    valorEntradaInput.step = "0.01"
+    valorEntradaInput.min = "0"
+    valorEntradaInput.placeholder = "Valor entrada"
+    valorEntradaInput.value = t.valorEntrada ?? ""
+    valorEntradaInput.disabled = !t.deuEntrada
+    valorEntradaInput.addEventListener("change", async () => { const v = valorEntradaInput.value === "" ? null : Number(valorEntradaInput.value); t.valorEntrada = isNaN(v) ? null : v; if (isRemote()) { await pbUpdate(t) } else { saveLocal() } render() })
+
     const previstaInput = document.createElement("input")
     previstaInput.type = "date"
     previstaInput.placeholder = "Prevista"
@@ -205,8 +222,10 @@ function render() {
     right.appendChild(detalhesInput)
     right.appendChild(tipoInput)
     right.appendChild(valorInput)
+    right.appendChild(valorEntradaInput)
     right.appendChild(previstaInput)
     right.appendChild(execucaoInput)
+    right.appendChild(observacoesInput)
 
     const actions = document.createElement("div")
     actions.className = "task-actions"
@@ -232,10 +251,13 @@ function bindUI() {
     const detalhes = document.getElementById("detalhesInput").value.trim()
     const tipoProduto = document.getElementById("tipoInput").value.trim()
     const valorRaw = document.getElementById("valorInput").value
+    const valorEntradaRaw = document.getElementById("valorEntradaInput").value
     const dataPrevista = document.getElementById("previstaInput").value
     const deuEntrada = document.getElementById("entradaInput").checked
+    const observacoes = document.getElementById("observacoesInput").value
     if (!cliente || !detalhes) return
-    const t = { id: uid(), cliente, detalhes, tipoProduto, valor: valorRaw === "" ? null : Number(valorRaw), deuEntrada, concluida: false, dataPrevista, dataExecucao: "", dataCriacao: todayStr() }
+    const valorEntrada = valorEntradaRaw === "" ? null : Number(valorEntradaRaw)
+    const t = { id: uid(), cliente, detalhes, tipoProduto, valor: valorRaw === "" ? null : Number(valorRaw), valorEntrada: deuEntrada ? valorEntrada : null, deuEntrada, concluida: false, dataPrevista, dataExecucao: "", dataCriacao: todayStr(), observacoes }
     if (isRemote()) {
       pbCreate(t).then(newT => { state.tasks.unshift(newT); render() })
     } else {
@@ -282,7 +304,7 @@ function bindUI() {
       try {
         const data = JSON.parse(reader.result)
         if (!Array.isArray(data)) return
-        const imported = data.map(d => ({ id: d.id || uid(), cliente: d.cliente || "", detalhes: d.detalhes || "", tipoProduto: d.tipoProduto || "", valor: d.valor ?? null, deuEntrada: !!d.deuEntrada, concluida: !!d.concluida, dataPrevista: d.dataPrevista || "", dataExecucao: d.dataExecucao || "", dataCriacao: d.dataCriacao || todayStr() }))
+        const imported = data.map(d => ({ id: d.id || uid(), cliente: d.cliente || "", detalhes: d.detalhes || "", tipoProduto: d.tipoProduto || "", valor: d.valor ?? null, valorEntrada: d.valorEntrada ?? null, deuEntrada: !!d.deuEntrada, concluida: !!d.concluida, dataPrevista: d.dataPrevista || "", dataExecucao: d.dataExecucao || "", dataCriacao: d.dataCriacao || todayStr(), observacoes: d.observacoes || "" }))
         if (isRemote()) {
           Promise.all(imported.map(pbCreate)).then(created => { state.tasks = created; render() })
         } else {
@@ -300,6 +322,11 @@ function bindUI() {
   const useLocalBtn = document.getElementById("useLocalBtn")
   const pbUrlInput = document.getElementById("pbUrlInput")
   pbUrlInput.value = state.settings.pbUrl || ""
+  const entradaFormCb = document.getElementById("entradaInput")
+  const valorEntradaFormInput = document.getElementById("valorEntradaInput")
+  const toggleFormEntrada = () => { valorEntradaFormInput.disabled = !entradaFormCb.checked }
+  toggleFormEntrada()
+  entradaFormCb.addEventListener("change", toggleFormEntrada)
   connectPBBtn.addEventListener("click", async () => {
     const url = pbUrlInput.value.trim()
     if (!url) return
@@ -328,3 +355,8 @@ function init() {
 }
 
 document.addEventListener("DOMContentLoaded", init)
+    const observacoesInput = document.createElement("textarea")
+    observacoesInput.rows = 5
+    observacoesInput.placeholder = "Observações"
+    observacoesInput.value = t.observacoes || ""
+    observacoesInput.addEventListener("change", async () => { t.observacoes = observacoesInput.value; if (isRemote()) { await pbUpdate(t) } else { saveLocal() } })
